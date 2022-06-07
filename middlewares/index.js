@@ -12,3 +12,16 @@ exports.isAuthenticatedUser = async (req, res, next) => {
     req.user = await User.findById(decoded.id);
     next();
 };
+
+exports.isInstructor = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id).exec();
+        if (!user.role.includes("Instructor")) {
+            return res.sendStatus(403);
+        } else {
+            next();
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
