@@ -16,7 +16,14 @@ const {
     removeVideo,
     addLesson,
     update,
+    removeLesson,
+    updateLesson,
+    publishCourse,
+    unpublishCourse,
+    courses,
 } = require("../controller/courseController");
+
+router.get("/courses", courses);
 
 router.post("/course/upload-image", uploadImage);
 router.post("/course/remove-image", removeImage);
@@ -41,6 +48,19 @@ router.post(
     "/course/lesson/:slug/:instructorId",
     isAuthenticatedUser,
     addLesson
+);
+
+// publish unpublish
+router.put("/course/publish/:courseId", isAuthenticatedUser, publishCourse);
+router.put("/course/unpublish/:courseId", isAuthenticatedUser, unpublishCourse);
+
+// delete
+router.put("/course/:slug/:lessonId", isAuthenticatedUser, removeLesson);
+// update
+router.put(
+    "/course/lesson/:slug/:instructorId",
+    isAuthenticatedUser,
+    updateLesson
 );
 
 module.exports = router;
