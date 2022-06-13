@@ -78,7 +78,6 @@ exports.login = async (req, res) => {
             user,
         });
     } catch (err) {
-        console.log(err);
         return res.status(400).send("Error. Try again.");
     }
 };
@@ -87,9 +86,7 @@ exports.logout = async (req, res) => {
     try {
         res.clearCookie("token");
         return res.json({ message: "Signout success" });
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 };
 
 exports.currentUser = async (req, res) => {
@@ -97,7 +94,7 @@ exports.currentUser = async (req, res) => {
         const user = await User.findById(req.user.id)
             .select("-password")
             .exec();
-        console.log("CURRENT_USER", user);
+
         return res.json(user);
     } catch (err) {
         console.log(err);
