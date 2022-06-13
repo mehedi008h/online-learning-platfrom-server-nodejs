@@ -436,7 +436,7 @@ exports.stripeSuccess = async (req, res) => {
         const session = await stripe.checkout.sessions.retrieve(
             user.stripeSession.id
         );
-        console.log("STRIPE SUCCESS", session);
+
         // if session payment status is paid, push course to user's course []
         if (session.payment_status === "paid") {
             await User.findByIdAndUpdate(user._id, {
