@@ -384,6 +384,8 @@ exports.paidEnrollment = async (req, res) => {
         const course = await Course.findById(req.params.courseId)
             .populate("instructor")
             .exec();
+
+        console.log("Course: ", course);
         if (!course.paid) return;
         // application fee 30%
         const fee = (course.price * 30) / 100;
@@ -415,7 +417,7 @@ exports.paidEnrollment = async (req, res) => {
         await User.findByIdAndUpdate(req.user.id, {
             stripeSession: session,
         }).exec();
-        res.send(session.id);
+        res.send(session);
     } catch (err) {
         console.log("PAID ENROLLMENT ERR", err);
         return res.status(400).send("Enrollment create failed");
