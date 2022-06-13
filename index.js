@@ -32,7 +32,7 @@ app.get("/api/csrf-token", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.json("Welcome");
+    res.json("Welcome to Online Learning Platfrom");
 });
 
 // port
