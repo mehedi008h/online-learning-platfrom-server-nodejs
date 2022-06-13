@@ -31,6 +31,10 @@ app.get("/api/csrf-token", (req, res) => {
     res.json({ csrfToken: req.csrfToken() });
 });
 
+app.get("/", (req, res) => {
+    res.json("Welcome");
+});
+
 // port
 const port = process.env.PORT || 8000;
 
