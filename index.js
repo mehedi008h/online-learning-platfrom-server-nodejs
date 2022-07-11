@@ -5,6 +5,7 @@ const csrf = require("csurf");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const connectDatabase = require("./config/database");
+const errorMiddleware = require("./middlewares/error");
 require("dotenv").config();
 
 const csrfProtection = csrf({ cookie: true });
@@ -35,7 +36,9 @@ app.get("/", (req, res) => {
     res.json("Welcome to Online Developer Learning Platfrom");
 });
 
+// Middleware to handle error
+app.use(errorMiddleware);
 // port
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));

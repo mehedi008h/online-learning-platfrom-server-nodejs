@@ -57,7 +57,7 @@ router.post(
     isAuthenticatedUser,
     removeVideo
 );
-// `/api/course/lesson/${slug}/${course.instructor._id}`,
+
 router.post(
     "/course/lesson/:slug/:instructorId",
     isAuthenticatedUser,
@@ -77,13 +77,14 @@ router.put(
     updateLesson
 );
 
-router.get("/check-enrollment/:courseId", isAuthenticatedUser, checkEnrollment);
+router.get("/check-enrollment/:slug", isAuthenticatedUser, checkEnrollment);
 
 // enrollment
 router.post("/free-enrollment/:courseId", isAuthenticatedUser, freeEnrollment);
 router.post("/paid-enrollment/:courseId", isAuthenticatedUser, paidEnrollment);
 router.get("/stripe-success/:courseId", isAuthenticatedUser, stripeSuccess);
 
+// user
 router.get("/user-courses", isAuthenticatedUser, userCourses);
 router.get("/user/course/:slug", isAuthenticatedUser, isEnrolled, read);
 
