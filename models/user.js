@@ -7,19 +7,19 @@ const userSchema = new Schema(
         name: {
             type: String,
             trim: true,
-            required: true,
+            required: [true, "Please Enter your name!"],
         },
         email: {
             type: String,
             trim: true,
-            required: true,
+            required: [true, "Please Enter your email!"],
             unique: true,
         },
         password: {
             type: String,
-            required: true,
-            min: 6,
-            max: 64,
+            required: [true, "Please Enter your password!"],
+            minlength: [6, "Your password must be longer than 6 characters"],
+            maxLength: [64, "Your password cannot exceed 64 characters"],
         },
         picture: {
             type: String,
