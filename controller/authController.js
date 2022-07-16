@@ -13,6 +13,7 @@ const awsConfig = {
 };
 
 const SES = new AWS.SES(awsConfig);
+const S3 = new AWS.S3(awsConfig);
 
 // user register
 exports.register = catchAsyncErrors(async (req, res, next) => {
@@ -100,6 +101,41 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
 // get currently logged in user
 exports.currentUser = catchAsyncErrors(async (req, res) => {
     const user = await User.findById(req.user.id).select("-password").exec();
+
+    res.status(200).json({
+        success: true,
+        user,
+    });
+});
+
+// Update user profile   =>   /api/current-user/update
+exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
+    const newUserData = {
+        name: req.body.name,
+        bio: req.body.bio,
+        picture: req.body.picture,
+    };
+
+    const newUser = await User.findByIdAndUpdate(req.user.id, newUserData, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+    });
+
+    res.status(200).json({
+        success: true,
+    });
+});
+
+// Get user details   =>   /api/user/:id
+exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
+    console.log("Id", req.param.id);
+    const user = await User.findById(req.params.id);
+    if (!user) {
+        return next(
+            new ErrorHandler(`User does not found with id: ${req.params.id}`)
+        );
+    }
 
     res.status(200).json({
         success: true,

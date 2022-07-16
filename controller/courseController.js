@@ -8,6 +8,7 @@ const { readFileSync } = require("fs");
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
+const APIFeatures = require("../utils/apiFeatures");
 
 const awsConfig = {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -309,10 +310,25 @@ exports.unpublishCourse = catchAsyncErrors(async (req, res, next) => {
 
 // get all piblished course
 exports.courses = async (req, res) => {
-    const all = await Course.find({ published: true })
-        .populate("instructor", "_id name")
-        .exec();
-    res.status(200).json(all);
+    const resPerPage = 4;
+    const courseCount = await Course.countDocuments();
+    const apiFeatures = new APIFeatures(
+        Course.find({ published: true }),
+        req.query
+    ).pagination(resPerPage);
+
+    let courses = await apiFeatures.query;
+    let filteredCourseCount = courses.length;
+    // const all = await Course.find({ published: true })
+    //     .populate("instructor", "_id name")
+    //     .exec();
+    res.status(200).json({
+        success: true,
+        courseCount,
+        resPerPage,
+        filteredCourseCount,
+        courses,
+    });
 };
 
 // check enrollment

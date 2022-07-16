@@ -4,6 +4,7 @@ const { readdirSync } = require("fs");
 const csrf = require("csurf");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const path = require("path");
 const connectDatabase = require("./config/database");
 const errorMiddleware = require("./middlewares/error");
 require("dotenv").config();
@@ -34,6 +35,12 @@ app.get("/api/csrf-token", (req, res) => {
 
 app.get("/", (req, res) => {
     res.json("Welcome to Online Developer Learning Platfrom");
+});
+
+app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/client/build", "index.html"));
 });
 
 // Middleware to handle error
