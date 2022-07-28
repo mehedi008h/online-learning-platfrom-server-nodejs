@@ -93,17 +93,13 @@ exports.create = catchAsyncErrors(async (req, res, next) => {
 
 // course details => Admin
 exports.read = catchAsyncErrors(async (req, res, next) => {
-    const course = await Course.findOne({ slug: req.params.slug })
-        .populate("instructor", "_id name")
-        .exec();
+    const course = await Course.findOne({ slug: req.params.slug }).exec();
     res.status(200).json(course);
 });
 
 // course details => Public
 exports.readPublic = catchAsyncErrors(async (req, res) => {
-    let course = await Course.findOne({ slug: req.params.slug })
-        .populate("instructor", "_id name")
-        .exec();
+    let course = await Course.findOne({ slug: req.params.slug }).exec();
 
     res.status(200).json(course);
 });
@@ -181,9 +177,7 @@ exports.addLesson = catchAsyncErrors(async (req, res, next) => {
             },
         },
         { new: true }
-    )
-        .populate("instructor", "_id name")
-        .exec();
+    ).exec();
     res.status(200).json({ updated, success: true });
 });
 
@@ -310,12 +304,15 @@ exports.unpublishCourse = catchAsyncErrors(async (req, res, next) => {
 
 // get all piblished course
 exports.courses = async (req, res) => {
-    const resPerPage = 4;
+    const resPerPage = 8;
     const courseCount = await Course.countDocuments();
     const apiFeatures = new APIFeatures(
         Course.find({ published: true }),
         req.query
-    ).pagination(resPerPage);
+    )
+        .search()
+        .filter()
+        .pagination(resPerPage);
 
     let courses = await apiFeatures.query;
     let filteredCourseCount = courses.length;
@@ -444,9 +441,7 @@ exports.stripeSuccess = catchAsyncErrors(async (req, res, next) => {
 // user courses
 exports.userCourses = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id).exec();
-    const courses = await Course.find({ _id: { $in: user.courses } })
-        .populate("instructor", "_id name")
-        .exec();
+    const courses = await Course.find({ _id: { $in: user.courses } }).exec();
     res.status(200).json(courses);
 });
 

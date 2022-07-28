@@ -129,7 +129,6 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
 
 // Get user details   =>   /api/user/:id
 exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
-    console.log("Id", req.param.id);
     const user = await User.findById(req.params.id);
     if (!user) {
         return next(
